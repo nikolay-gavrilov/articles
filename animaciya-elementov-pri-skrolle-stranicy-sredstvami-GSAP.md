@@ -125,7 +125,7 @@ var textPos1 = false,
 	textPos2 = false,
 	textPos3 = false,
 	textPos4 = false,
-	textOffsetTop = 350;
+	textOffsetTop = $scrollTop + 350;
 ```
 
 ### Анимация иконок
@@ -139,17 +139,17 @@ function doohIconsAnim(position, height, el) {}
 if (windowWidth > 1023 && el.hasClass('fixMenuPoint') {}
 ```
 **Разбор кода на примере анимации 1й иконки**
-Запишем условие, которое проверит, что позиция скролла ``$scrollTop`` + отступ от верхней точки экрана ``textOffsetTop`` больше или равен позиции первого блока относительно начала страницы ``doohTextArray[0].pos`` и позиция скролла ``$scrollTop`` + отступ от верхней точки экрана меньше позиции второго блока относительно начала страницы. Также мы проверим, что анимация первой иконки у нас еще не запущена ``!textPos1``. Если условия соблюдены, то мы переходим к анимации 1й иконки, добавляя ей нужный класс ``scale_mod`` используя GSAP ``TweenMax.set(doohIconsArray[0].icon, {className: '+=scale_mod'});`` . Также мы отмечаем, что анимация 1й иконки у нас отработала ``textPos1 = true;``.
-В альтернативной ветке мы запишем условие для возврата иконки в исходное состояние если у нас анимация отработала, но мы начали скроллить страницу вверх. В таком случае мы проверяем, что позиция скролла ``$scrollTop`` + отступ от верхней точки экрана ``textOffsetTop`` меньше позиции первого блока относительно начала страницы ``doohTextArray[0].pos`` и анимация первой иконки уже выполнялась ``textPos1``. Если условия выполнены мы убираем ``scale_mod`` у иконки и ставим флаг в исходное положение ``textPos1 = false;``.
+Запишем условие, которое проверит, что отступ от верхней точки экрана для текстового блока ``textOffsetTop`` больше или равен позиции первого блока относительно начала страницы ``doohTextArray[0].pos`` и отступ от верхней точки экрана для текстового блока ``textOffsetTop`` меньше позиции второго блока ``doohTextArray[1].pos`` относительно начала страницы. Также мы проверим, что анимация первой иконки у нас еще не запущена ``!textPos1``. Если условия соблюдены, то мы переходим к анимации 1й иконки, добавляя ей нужный класс ``scale_mod`` используя GSAP ``TweenMax.set(doohIconsArray[0].icon, {className: '+=scale_mod'});`` . Также мы отмечаем, что анимация 1й иконки у нас отработала ``textPos1 = true;``.
+В альтернативной ветке мы запишем условие для возврата иконки в исходное состояние если у нас анимация отработала, но мы начали скроллить страницу вверх. В таком случае мы проверяем, что ``textOffsetTop`` меньше позиции первого блока относительно начала страницы ``doohTextArray[0].pos`` и анимация первой иконки уже выполнялась ``textPos1``. Если условия выполнены мы убираем ``scale_mod`` у иконки и ставим флаг в исходное положение ``textPos1 = false;``.
 
 Весь код анимации 1й иконки:
 
 ```
-	if ($scrollTop + textOffsetTop >= doohTextArray[0].pos && $scrollTop + textOffsetTop < doohTextArray[1].pos && !textPos1) {
+	if (textOffsetTop >= doohTextArray[0].pos && textOffsetTop < doohTextArray[1].pos && !textPos1) {
 			textPos1 = true;
 			TweenMax.set(doohIconsArray[0].icon, {className: '+=scale_mod'});
 		} else {
-			if ($scrollTop + textOffsetTop < doohTextArray[0].pos && textPos1) {
+			if (textOffsetTop < doohTextArray[0].pos && textPos1) {
 				textPos1 = false;
 				TweenMax.set(doohIconsArray[0].icon, {className: '-=scale_mod'});
 			}
@@ -161,40 +161,40 @@ if (windowWidth > 1023 && el.hasClass('fixMenuPoint') {}
 ```
 function doohIconsAnim(position, height, el) {
 	if (windowWidth > 1023 && el.hasClass('fixMenuPoint')) {
-		if ($scrollTop + textOffsetTop >= doohTextArray[0].pos && $scrollTop + textOffsetTop < doohTextArray[1].pos && !textPos1) {
+		if (textOffsetTop >= doohTextArray[0].pos && textOffsetTop < doohTextArray[1].pos && !textPos1) {
 			textPos1 = true;
 			TweenMax.set(doohIconsArray[0].icon, {className: '+=scale_mod'});
 		} else {
-			if ($scrollTop + textOffsetTop < doohTextArray[0].pos && textPos1) {
+			if (textOffsetTop < doohTextArray[0].pos && textPos1) {
 				textPos1 = false;
 				TweenMax.set(doohIconsArray[0].icon, {className: '-=scale_mod'});
 			}
 		}
 
 		if ($scrollTop >= position) {
-			if ($scrollTop + textOffsetTop >= doohTextArray[1].pos && $scrollTop + textOffsetTop < doohTextArray[2].pos && !textPos2) {
+			if (textOffsetTop >= doohTextArray[1].pos && textOffsetTop < doohTextArray[2].pos && !textPos2) {
 				textPos2 = true;
 				textPos1 = false;
 				TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 				TweenMax.set(doohIconsArray[1].icon, {className: '+=scale_mod'});
-			} else if ($scrollTop + textOffsetTop >= doohTextArray[2].pos && $scrollTop + textOffsetTop < doohTextArray[3].pos && !textPos3) {
+			} else if (textOffsetTop >= doohTextArray[2].pos && textOffsetTop < doohTextArray[3].pos && !textPos3) {
 				textPos3 = true;
 				TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 				TweenMax.set(doohIconsArray[2].icon, {className: '+=scale_mod'});
-			} else if ($scrollTop + textOffsetTop >= doohTextArray[3].pos && !textPos4) {
+			} else if (textOffsetTop >= doohTextArray[3].pos && !textPos4) {
 				textPos4 = true;
 				TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 				TweenMax.set(doohIconsArray[3].icon, {className: '+=scale_mod'});
 			} else {
-				if ($scrollTop + textOffsetTop < doohTextArray[1].pos && $scrollTop + textOffsetTop >= doohTextArray[0].pos && textPos2) {
+				if (textOffsetTop < doohTextArray[1].pos && textOffsetTop >= doohTextArray[0].pos && textPos2) {
 					textPos2 = false;
 					TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 					TweenMax.set(doohIconsArray[0].icon, {className: '+=scale_mod'});
-				} else if ($scrollTop + textOffsetTop < doohTextArray[2].pos && $scrollTop + textOffsetTop >= doohTextArray[1].pos && textPos3) {
+				} else if (textOffsetTop < doohTextArray[2].pos && textOffsetTop >= doohTextArray[1].pos && textPos3) {
 					textPos3 = false;
 					TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 					TweenMax.set(doohIconsArray[1].icon, {className: '+=scale_mod'});
-				} else if ($scrollTop + textOffsetTop < doohTextArray[3].pos && $scrollTop + textOffsetTop >= doohTextArray[2].pos && textPos4) {
+				} else if (textOffsetTop < doohTextArray[3].pos && textOffsetTop >= doohTextArray[2].pos && textPos4) {
 					textPos4 = false;
 					TweenMax.set('.dooh_icon_wrap.scale_mod', {className: '-=scale_mod'});
 					TweenMax.set(doohIconsArray[2].icon, {className: '+=scale_mod'});
